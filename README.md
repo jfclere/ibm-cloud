@@ -22,7 +22,7 @@ export IC_TYPE=ks
 ```bash
 ibmcloud oc cluster config --cluster  ${IC_USER}-cluster --admin
 ```
-if the token as timeout relog to IBM cloud
+if the token has timeout relog to IBM cloud
 ```bash
 ibmcloud login -r eu-de -u ${IC_USER}@redhat.com  --apikey ${IC_API_KEY} --sso
 ```
