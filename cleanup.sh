@@ -49,7 +49,7 @@ if [ $? -ne 0 ]; then
   echo "Something wrong while deleting subnet ${IC_USER}-net"
   ibmcloud is subnets
 fi
-# wait until it is delete
+# wait until it is deleted
 while true
 do
   ibmcloud is subnet ${IC_USER}-subnet 2>&1 | grep 404
@@ -57,7 +57,8 @@ do
     break
   fi
   sleep 10
-  "Waiting for subnet ${IC_USER}-subnet to be rempoved"
+  echo "Waiting for subnet ${IC_USER}-subnet to be removed"
+  ibmcloud is subnet-delete ${IC_USER}-subnet -f
 done 
 
 # remove the public gateway
@@ -66,10 +67,21 @@ if [ $? -ne 0 ]; then
   echo "Something wrong while deleting public gateway ${IC_USER}-gateway"
   ibmcloud is public-gateways
 fi
+# wait until it is deleted
+while true
+do
+  ibmcloud is public-gateway ${IC_USER}-gateway
+  if [ $? -ne 0 ]; then
+    break
+  fi
+  sleep 10
+  echo "Waiting for public-gateway ${IC_USER}-gateway to be removed"
+done
+ 
 
 # remove the IBM cloud
 ibmcloud is vpcd ${IC_USER}-vpc -f
 if [ $? -ne 0 ]; then
   echo "Something wrong while deleting public gateway ${IC_USER}-gateway"
-  ibmcloud is public-gateways
+  ibmcloud is vpcs
 fi
