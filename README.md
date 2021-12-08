@@ -13,6 +13,11 @@ export IC_USER=redhatuser
 bash startup.sh
 ```
 
+To use kubernetes add the export:
+```bash
+export IC_TYPE=ks
+```
+
 # to connect to the openshift cluster
 ```bash
 ibmcloud oc cluster config --cluster  ${IC_USER}-cluster --admin

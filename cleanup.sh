@@ -15,7 +15,16 @@ if [ -z "${IC_USER}" ]; then
   IC_USER=${USER}
 fi
 
-echo "Using IC_API_KEY: ${IC_API_KEY}, IC_REGION: ${IC_REGION} and IC_USER $IC_USER}"
+if [ -z "${IC_TYPE}" ]; then
+  echo "missing IC_TYPE supported oc or ks"
+  exit 1
+fi
+
+echo "Using IC_API_KEY: ${IC_API_KEY}, IC_REGION: ${IC_REGION}, IC_USER: $IC_USER} and IC_TYPE: ${IC_TYPE}"
+TYPE=oc
+if [ ${IC_TYPE} != "oc" ]; then
+  TYPE=ks
+fi
 
 # Check for a cluster, if failed try to login...
 ibmcloud oc cluster ls
