@@ -88,12 +88,13 @@ GWY_ID=`ibmcloud is public-gateway ${IC_USER}-gateway | grep ^ID | awk '{ print 
 
 ibmcloud is subnet-update $SBN_ID --public-gateway-id $GWY_ID
 if [ ${TYPE} == "oc" ]; then
+  # only the last version of minor version can be used.
+  #  --version 4.7.30_openshift \
   ibmcloud resource service-instance-create ${IC_USER}-cos cloud-object-storage standard global -g Default
   COS_ID=`ibmcloud resource service-instance ${IC_USER}-cos | grep ^ID | awk '{ print $2 }'`
   ibmcloud oc cluster create vpc-gen2 \
     --name ${IC_USER}-cluster \
     --zone eu-de-1 \
-    --version 4.7.30_openshift \
     --flavor bx2.4x16 \
     --workers 2 \
     --vpc-id ${VPC_ID} \
