@@ -10,6 +10,7 @@ and create the VPC, then run the startup script
 export IC_API_KEY=the_key
 export IC_REGION=eu-de
 export IC_USER=redhatuser
+export IC_TYPE=oc
 bash startup.sh
 ```
 
