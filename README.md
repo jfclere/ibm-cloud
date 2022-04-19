@@ -5,7 +5,7 @@ based on https://github.com/snowdrop/k8s-infra/blob/main/ibm-cloud/README.md
 # to startup an openshift cluster:
 
 Look to https://github.com/snowdrop/k8s-infra/blob/main/ibm-cloud/README.md
-and create the VPC, then run the startup script
+and run the startup script
 ```bash
 export IC_API_KEY=the_key
 export IC_REGION=eu-de
