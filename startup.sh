@@ -58,15 +58,15 @@ fi
 VPC_ID=`ibmcloud is vpc ${IC_USER}-vpc | grep ^ID | awk '{ print $2 }'`
 
 # create the public gateway that is missing in the ansible script
-ibmcloud is public-gateway-create ${IC_USER}-gateway $VPC_ID eu-de-1
+ibmcloud is public-gateway-create ${IC_USER}-gateway $VPC_ID ${IC_REGION}-1
 if [ $? -ne 0 ]; then
   echo "Something is wrong aborting"
   ibmcloud is public-gateways
 fi
 
 # create the sub net
-CIDR_BLOCK=`ibmcloud is vpc-address-prefixes ${IC_USER}-vpc | grep eu-de-1 | awk ' { print $3 } '`
-ibmcloud is subnet-create ${IC_USER}-subnet $VPC_ID eu-de-1 --ipv4-cidr-block "${CIDR_BLOCK}"
+CIDR_BLOCK=`ibmcloud is vpc-address-prefixes ${IC_USER}-vpc | grep ${IC_REGION}-1 | awk ' { print $3 } '`
+ibmcloud is subnet-create ${IC_USER}-subnet $VPC_ID ${IC_REGION}-1 --ipv4-cidr-block "${CIDR_BLOCK}"
 if [ $? -ne 0 ]; then
   echo "Something is wrong aborting"
   ibmcloud is subnets
@@ -83,7 +83,7 @@ done
 SBN_ID=`ibmcloud is subnet ${IC_USER}-subnet  | grep ^ID | awk '{ print $2 }'`
 
 # add the gateway
-ibmcloud is public-gateway-create ${IC_USER}-gateway ${VPC_ID} eu-de-1
+ibmcloud is public-gateway-create ${IC_USER}-gateway ${VPC_ID} ${IC_REGION}-1
 GWY_ID=`ibmcloud is public-gateway ${IC_USER}-gateway | grep ^ID | awk '{ print $2 }'`
 
 ibmcloud is subnet-update $SBN_ID --public-gateway-id $GWY_ID
@@ -97,19 +97,20 @@ if [ ${TYPE} == "oc" ]; then
   # only the last version of minor version can be used.
   #  --version 4.7.30_openshift \
   # ibmcloud ks versions to get the version.
+  oc_version=$(ibmcloud ks versions |grep "openshift (default)" |awk '{print $1}')
   ibmcloud oc cluster create vpc-gen2 \
     --name ${IC_USER}-cluster \
-    --zone eu-de-1 \
+    --zone ${IC_REGION}-1 \
     --flavor bx2.4x16 \
     --workers 2 \
-    --version 4.8.21_openshift \
+    --version ${oc_version} \
     --vpc-id ${VPC_ID} \
     --subnet-id ${SBN_ID} \
     --cos-instance ${COS_ID}
 else
   ibmcloud ks cluster create vpc-gen2 \
     --name ${IC_USER}-cluster \
-    --zone eu-de-1 \
+    --zone ${IC_REGION}-1 \
     --flavor bx2.4x16 \
     --workers 2 \
     --vpc-id ${VPC_ID} \
